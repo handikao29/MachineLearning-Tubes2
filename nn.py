@@ -43,8 +43,9 @@ class NeuralNetwork:
         for i in range(epoch):
             for j in range(len(self.input)):
                 self.iterator = j
-                self.feedforward()
-                self.backprop_search_gradient()
+                for k in range(batch_size):
+                    self.feedforward()
+                    self.backprop_search_gradient()
                 self.backprop_update_weight()
 
     def feedforward(self):
@@ -56,7 +57,6 @@ class NeuralNetwork:
 
         output_layer = sigmoid(np.dot(self.layer[-1], self.weight_output))
         self.output = output_layer
-        print(output_layer)
 
     def backprop_search_gradient(self):        
         for i in range(self.n_hidden_layer+2):
@@ -70,6 +70,9 @@ class NeuralNetwork:
                 self.delta_hidden_layer.append(np.dot(self.weight_hidden_layer[self.n_hidden_layer-i], self.delta_hidden_layer[i-2]) * sigmoid_derivative(self.output))
 
     def backprop_update_weight(self):
+        self.weight_input_prev = self.weight_input
+        self.weight_output_prev = self.weight_output
+        self.weight_hidden_layer_prev = self.weight_hidden_layer
         for i in range(self.n_hidden_layer+1):
             if i == 0 :
                 # print(self.delta_output)
@@ -90,6 +93,4 @@ class NeuralNetwork:
                 # print(self.momentum * np.multiply(np.transpose(self.delta_hidden_layer[i-1]), np.transpose(self.layer[self.n_hidden_layer-i-1])))
                 hidden_layer_unit = np.reshape(self.layer[self.n_hidden_layer-i-1], (len(self.layer[self.n_hidden_layer-i-1]),-1))
                 self.weight_hidden_layer[self.n_hidden_layer-i-1] = self.weight_hidden_layer[self.n_hidden_layer-i-1] + (self.momentum * np.multiply(np.transpose(self.delta_hidden_layer[i-1]), hidden_layer_unit)) +  + (self.learning_rate * self.weight_hidden_layer_prev[self.n_hidden_layer-i-1])
-        self.weight_input_prev = self.weight_input
-        self.weight_output_prev = self.weight_output
-        self.weight_hidden_layer_prev = self.weight_hidden_layer
+        
