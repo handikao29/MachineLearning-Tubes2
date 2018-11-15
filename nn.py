@@ -69,7 +69,7 @@ class NeuralNetwork:
             if i == 0 :
                 self.weight_output = self.weight_output + (self.momentum * np.multiply(np.transpose(self.delta_output), np.transpose(self.layer[self.n_hidden_layer-1])))
             elif i == self.n_hidden_layer-1 :
-                self.weight_input = self.weight_input + (self.momentum * np.multiply(np.transpose(self.delta_hidden_layer[i]), np.transpose(self.layer[0])))
+                self.weight_input = self.weight_input + (self.momentum * np.multiply(np.transpose(self.delta_hidden_layer[i]), np.transpose(self.input)))
             else:
                 self.weight_hidden_layer[self.n_hidden_layer-i-1] = self.weight_hidden_layer[self.n_hidden_layer-i-1] + (self.momentum * np.multiply(np.transpose(self.delta_hidden_layer[i-1]), np.transpose(self.layer[self.n_hidden_layer-i-1])))
 
